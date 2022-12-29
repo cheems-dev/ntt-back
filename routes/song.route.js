@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
 const songRoute = express.Router();
-let SongModel = require('../model/Song'); // Add Song
+
+let SongModel = require('../model/Song');
+
+// Add Song
 songRoute.route('/create-song').post((req, res, next) => {
   SongModel.create(req.body, (error, data) => {
     if (error) {
@@ -10,16 +13,21 @@ songRoute.route('/create-song').post((req, res, next) => {
       res.json(data);
     }
   });
-}); // Get all songs
+});
+
+// Get all songs
 songRoute.route('/').get((req, res) => {
   SongModel.find((error, data) => {
     if (error) {
+      console.log(error);
       return next(error);
     } else {
       res.json(data);
     }
   });
-}); // Get single song
+});
+
+// Get single song
 songRoute.route('/get-song/:id').get((req, res) => {
   SongModel.findById(req.params.id, (error, data) => {
     if (error) {
@@ -28,7 +36,9 @@ songRoute.route('/get-song/:id').get((req, res) => {
       res.json(data);
     }
   });
-}); // Update song
+});
+
+// Update song
 songRoute.route('/update-song/:id').put((req, res, next) => {
   SongModel.findByIdAndUpdate(
     req.params.id,
@@ -45,7 +55,9 @@ songRoute.route('/update-song/:id').put((req, res, next) => {
       }
     }
   );
-}); // Delete song
+});
+
+// Delete song
 songRoute.route('/delete-song/:id').delete((req, res, next) => {
   SongModel.findByIdAndRemove(req.params.id, (error, data) => {
     if (error) {
@@ -57,4 +69,5 @@ songRoute.route('/delete-song/:id').delete((req, res, next) => {
     }
   });
 });
+
 module.exports = songRoute;

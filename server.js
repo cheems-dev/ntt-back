@@ -11,7 +11,6 @@ mongoose
   .connect(dataBaseConfig.db, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false,
   })
   .then(
     () => {
@@ -21,6 +20,8 @@ mongoose
       console.log('Could not connected to database : ' + error);
     }
   );
+
+mongoose.set('strictQuery', true);
 
 const songRoute = require('./routes/song.route');
 
@@ -32,7 +33,9 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(cors()); // RESTful API root
-app.use('/api', songRoute); // PORTconst port = process.env.PORT || 3000;
+app.use('/api', songRoute);
+// PORT
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log('PORT Connected on: ' + port);
 }); // Find 404 and hand over to error handler
