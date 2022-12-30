@@ -3,10 +3,10 @@ let express = require('express'),
   mongoose = require('mongoose'),
   cors = require('cors'),
   bodyParser = require('body-parser'),
-  dataBaseConfig = require('./database/db'); // Connecting mongoDB
+  dataBaseConfig = require('./database/db');
 
+// Connecting mongoDB
 mongoose.Promise = global.Promise;
-
 mongoose
   .connect(dataBaseConfig.db, {
     useNewUrlParser: true,
@@ -14,34 +14,45 @@ mongoose
   })
   .then(
     () => {
-      console.log('Database connected successfully ');
+      console.log('Database connected sucessfully ');
     },
     (error) => {
       console.log('Could not connected to database : ' + error);
     }
   );
 
-mongoose.set('strictQuery', true);
-
 const songRoute = require('./routes/song.route');
 
 const app = express();
+app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
-    extended: true,
+    extended: false,
   })
 );
-app.use(bodyParser.json());
-app.use(cors()); // RESTful API root
+app.use(cors());
+
+// RESTful API root
 app.use('/api', songRoute);
+
 // PORT
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || '8080';
+
 app.listen(port, () => {
   console.log('PORT Connected on: ' + port);
-}); // Find 404 and hand over to error handler
+});
+
+// Find 404 and hand over to error handler
 app.use((req, res, next) => {
   next(createError(404));
-}); // error handler
+});
+
+// Find 404 and hand over to error handler
+app.use((req, res, next) => {
+  next(createError(404));
+});
+
+// error handler
 app.use(function (err, req, res, next) {
   console.error(err.message);
   if (!err.statusCode) err.statusCode = 500;
